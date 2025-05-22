@@ -1,0 +1,63 @@
+[project]
+name = "siena-coding-comp"
+version = "0.0.1"
+description = "Tips/Solutions for the Siena HS Coding Competition."
+readme = "README.md"
+requires-python = ">=3.13"
+license = "MIT"
+
+[dependency-groups]
+lint = ["ruff", "pyright"]
+format = ["ruff"]
+typechecking = ["pyright"]
+all = [
+    { include-group = "lint" },
+    { include-group = "format" },
+    { include-group = "typechecking" },
+]
+
+[tool.pyright]
+include = ["src"]
+exclude = ["src/JES.py"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+fix = true
+extend-exclude = ["src/JES.py"]
+
+[tool.ruff.analyze]
+detect-string-imports = true
+direction = "Dependencies"
+
+[tool.ruff.lint]
+select = [
+    "F",   # pyflakes
+    "E",   # pycodestyle (Error)
+    "I",   # isort
+    "UP",  # pyupgrade
+    "YTT", # flake8-2020
+    "A",   # flake8-builtins
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "COM", # flake8-commas
+    "FLY", # flynt
+    "PL",  # pylint
+    "Q",   # flake8-quotes
+]
+ignore = [
+    "PLR2004", # magic-value-comparison
+    "E741",    # ambiguous variable name
+    "E742",    # ambiguous class name
+    "E743",    # ambiguous function name
+]
+pycodestyle = { max-doc-length = 120, max-line-length = 120 }
+flake8-quotes = { inline-quotes = "single", multiline-quotes = "double" }
+isort = { length-sort = true, combine-as-imports = true, from-first = true, lines-between-types = 1, lines-after-imports = 2 }
+flake8-builtins = { strict-checking = true }
+pylint = { max-statements = 100 }
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "single"
+skip-magic-trailing-comma = false
