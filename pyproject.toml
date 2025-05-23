@@ -50,14 +50,14 @@ ignore = [
     "E741",    # ambiguous variable name
     "E742",    # ambiguous class name
     "E743",    # ambiguous function name
+    "COM812",  # missing trailing comma
 ]
 pycodestyle = { max-doc-length = 120, max-line-length = 120 }
 flake8-quotes = { inline-quotes = "single", multiline-quotes = "double" }
-isort = { length-sort = true, combine-as-imports = true, from-first = true, lines-between-types = 1, lines-after-imports = 2 }
+isort = { split-on-trailing-comma = true, combine-as-imports = true, lines-between-types = 1, lines-after-imports = 2 }
 flake8-builtins = { strict-checking = true }
 pylint = { max-statements = 100 }
 
 [tool.ruff.format]
 indent-style = "space"
 quote-style = "single"
-skip-magic-trailing-comma = false

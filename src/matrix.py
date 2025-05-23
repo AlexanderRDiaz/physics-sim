@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 import math
+
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -43,28 +43,28 @@ class Vector:
         return (self.X == other.X) and (self.Y == other.Y)
 
     @staticmethod
-    def Zero():
+    def Zero() -> Vector:
         return Vector(0, 0)
 
-    def Length(self: Vector):
+    def Length(self: Vector) -> float:
         return math.sqrt((self.X * self.X) + (self.Y * self.Y))
 
-    def Normal(self: Vector):
+    def Normal(self: Vector) -> Vector:
         _len_ = Vector.Length(self)
         return Vector(self.X / _len_, self.Y / _len_)
 
-    def Distance(self: Vector, v: Vector):
+    def Distance(self: Vector, v: Vector) -> float:
         dx = self.X - v.X
         dy = self.Y - v.Y
         return math.sqrt((dx * dx) + (dy * dy))
 
-    def Dot(self: Vector, v: Vector):
+    def Dot(self: Vector, v: Vector) -> int | float:
         return (self.X * v.X) + (self.Y * v.Y)
 
-    def Cross(self: Vector, v: Vector):
+    def Cross(self: Vector, v: Vector) -> int | float:
         return (self.X * v.Y) - (self.Y * v.X)
 
-    def Transform(self: Vector, t: Transform):
+    def Transform(self: Vector, t: Transform) -> Vector:
         return Vector(
             t.Cosine * self.X - t.Sine * self.Y + t.X,
             t.Sine * self.X + t.Cosine * self.Y + t.Y,
@@ -84,20 +84,20 @@ class Transform:
     Sine: float
     Cosine: float
 
-    def __init__(self: Transform, x: int | float, y: int | float, angle: int | float):
+    def __init__(self: Transform, x: int | float, y: int | float, angle: int | float) -> None:
         self.X = x
         self.Y = y
         self.Sine = math.sin(angle)
         self.Cosine = math.cos(angle)
 
     @staticmethod
-    def FromVector(position: Vector, angle: int | float):
-        return Transform(position.X, position.Y, angle)
-
-    @staticmethod
-    def FromCoords(x: int | float, y: int | float, angle: int | float):
+    def FromCoords(x: int | float, y: int | float, angle: int | float) -> Transform:
         return Transform(x, y, angle)
 
     @staticmethod
-    def Zero():
+    def FromVector(position: Vector, angle: int | float) -> Transform:
+        return Transform(position.X, position.Y, angle)
+
+    @staticmethod
+    def Zero() -> Transform:
         return Transform(0, 0, 0)

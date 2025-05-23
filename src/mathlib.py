@@ -1,4 +1,4 @@
-def Clamp(value: int | float, minimum: int | float, maximum: int | float):
+def Clamp(value: int | float, minimum: int | float, maximum: int | float) -> int | float:
     if minimum == maximum:
         return minimum
 

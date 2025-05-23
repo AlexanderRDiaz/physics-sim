@@ -38,6 +38,15 @@ gray = (165, 165, 165)
 darkGray = (120, 120, 120)
 lightGray = (210, 210, 210)
 
+def writeFrame(num, folder, pict):
+  # Have to deal with single digit vs. double digit 
+  numStr=str(num)
+  if num < 10:
+    writePictureTo(pict,folder+"/frame00"+numStr+".jpg")
+  if num >= 10 and num<100:
+    writePictureTo(pict,folder+"/frame0"+numStr+".jpg")
+  if num >= 100:
+    writePictureTo(pict,folder+"/frame"+numStr+".jpg")
 
 # Encapsulates the JESPixel data , which includes:
 # Data type     Name             Description

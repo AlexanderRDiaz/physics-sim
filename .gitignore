@@ -1,1 +1,5 @@
 __pycache__
+.ruff_cache
+frames
+.DS_Store
+**.gif
