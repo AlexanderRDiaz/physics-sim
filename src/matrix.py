@@ -46,34 +46,28 @@ class Vector:
     def Zero():
         return Vector(0, 0)
 
-    @staticmethod
-    def Length(v: Vector):
-        return math.sqrt((v.X * v.X) + (v.Y * v.Y))
+    def Length(self: Vector):
+        return math.sqrt((self.X * self.X) + (self.Y * self.Y))
 
-    @staticmethod
-    def Distance(a: Vector, b: Vector):
-        dx = a.X - b.X
-        dy = a.Y - b.Y
+    def Normal(self: Vector):
+        _len_ = Vector.Length(self)
+        return Vector(self.X / _len_, self.Y / _len_)
+
+    def Distance(self: Vector, v: Vector):
+        dx = self.X - v.X
+        dy = self.Y - v.Y
         return math.sqrt((dx * dx) + (dy * dy))
 
-    @staticmethod
-    def Normal(v: Vector):
-        _len_ = Vector.Length(v)
-        return Vector(v.X / _len_, v.Y / _len_)
+    def Dot(self: Vector, v: Vector):
+        return (self.X * v.X) + (self.Y * v.Y)
 
-    @staticmethod
-    def Dot(a: Vector, b: Vector):
-        return (a.X * b.X) + (a.Y * b.Y)
+    def Cross(self: Vector, v: Vector):
+        return (self.X * v.Y) - (self.Y * v.X)
 
-    @staticmethod
-    def Cross(a: Vector, b: Vector):
-        return (a.X * b.Y) - (a.Y * b.X)
-
-    @staticmethod
-    def Transform(v: Vector, t: Transform):
+    def Transform(self: Vector, t: Transform):
         return Vector(
-            t.Cosine * v.X - t.Sine * v.Y + t.X,
-            t.Sine * v.X + t.Cosine * v.Y + t.Y,
+            t.Cosine * self.X - t.Sine * self.Y + t.X,
+            t.Sine * self.X + t.Cosine * self.Y + t.Y,
         )
 
 

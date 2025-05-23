@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-from matrix import Vector
+from abc import abstractmethod
 
-import enums as Enums
+import math
+
+from matrix import Vector, Transform
 
 
 class Body:
@@ -16,10 +18,6 @@ class Body:
         'Restitution',
         'Area',
         'Static',
-        'Radius',
-        'Width',
-        'Height',
-        'ShapeType',
     ]
 
     Position: Vector
@@ -34,25 +32,14 @@ class Body:
 
     Static: bool
 
-    Radius: float
-    Width: float
-    Height: float
-
-    ShapeType: Enums.ShapeType
-    Vertices: list[Vector] | None
-
+    @abstractmethod
     def __init__(  # noqa: PLR0913
         self: Body,
         position: Vector,
         density: float,
         mass: float,
         restitution: float,
-        area: float,
         static: bool,
-        radius: float,
-        width: float,
-        height: float,
-        shapeType: Enums.ShapeType,
     ):
         self.Position = position
         self.LinearVelocity = Vector.Zero()
@@ -62,31 +49,137 @@ class Body:
         self.Density = density
         self.Mass = mass
         self.Restitution = restitution
-        self.Area = area
 
         self.Static = static
 
+    @abstractmethod
+    def Move(self: Body, distance: Vector):
+        pass
+
+    @abstractmethod
+    def MoveTo(self: Body, position: Vector):
+        pass
+
+    @abstractmethod
+    def Rotate(self: Body, amount: int | float):
+        pass
+
+
+class CircleBody(Body):
+    __slots__ = [
+        'Radius',
+    ]
+
+    Radius: float
+
+    def __init__(  # noqa: PLR0913
+        self: CircleBody,
+        radius: float,
+        position: Vector,
+        density: float,
+        mass: float,
+        restitution: float,
+        static: bool,
+    ):
+        Body.__init__(
+            self,
+            position,
+            density,
+            mass,
+            restitution,
+            static,
+        )
         self.Radius = radius
+        self.Area = math.pi * radius * radius
+
+    def Move(self: CircleBody, distance: Vector):
+        self.Position += distance
+
+    def MoveTo(self: CircleBody, position: Vector):
+        self.Position = position
+
+    def Rotate(self: CircleBody, amount: int | float):
+        self.Rotation += amount
+
+
+class BoxBody(Body):
+    __slots__ = [
+        'Width',
+        'Height',
+        'Vertices',
+        'TriangulatedVertices',
+        'TransformedVertices',
+        'TransformUpdateRequired',
+    ]
+
+    Width: float
+    Height: float
+
+    Vertices: list[Vector]
+    TriangulatedVertices: list[int]
+    TransformedVertices: list[Vector]
+    TransformUpdateRequired: bool
+
+    def __init__(  # noqa: PLR0913
+        self: BoxBody,
+        width: float,
+        height: float,
+        position: Vector,
+        density: float,
+        mass: float,
+        restitution: float,
+        static: bool,
+    ):
+        Body.__init__(
+            self,
+            position,
+            density,
+            mass,
+            restitution,
+            static,
+        )
         self.Width = width
         self.Height = height
 
-        self.ShapeType = shapeType
+        self.Vertices = self.__CreateVertices()
+        self.TriangulatedVertices = [0, 1, 2, 0, 2, 3]
+        self.TransformUpdateRequired = True
 
-    def Move(self: Body, amount: Vector):
-        self.Position += amount
+    def Move(self: BoxBody, distance: Vector):
+        self.Position += distance
+        self.TransformUpdateRequired = True
 
-    def MoveTo(self: Body, position: Vector):
+    def MoveTo(self: BoxBody, position: Vector):
         self.Position = position
+        self.TransformUpdateRequired = True
 
-    def __CreateBoxVertices(self: Body, width: float, height: float) -> None:
-        left = -width / 2
-        right = left + width
-        bottom = -height / 2
-        top = bottom + height
+    def Rotate(self: BoxBody, amount: int | float):
+        self.Rotation += amount
 
-        vertices = [
+    def GetTransformedVertices(self: BoxBody):
+        if self.TransformUpdateRequired:
+            self.TransformedVertices = __TransformVertices(
+                self.Vertices,
+                self.Position,
+                self.Rotation,
+            )
+            self.TransformUpdateRequired = False
+
+    def __CreateVertices(self: BoxBody) -> list[Vector]:
+        left = -self.Width / 2
+        right = left + self.Width
+        bottom = -self.Height / 2
+        top = bottom + self.Height
+
+        return [
             Vector(left, top),
             Vector(left, bottom),
             Vector(right, top),
             Vector(right, bottom),
         ]
+
+
+def __TransformVertices(vertices: list[Vector], position: Vector, rotation: float) -> list[Vector]:
+    t = Transform.FromVector(position, rotation)
+
+    return [Vector.Transform(v, t) for v in vertices]
