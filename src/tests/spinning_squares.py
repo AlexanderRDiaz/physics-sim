@@ -1,8 +1,6 @@
-import drawlib
-import JES
-
-from container import Container
-from matrix import Vector
+from .. import JES, drawlib
+from ..container import Container
+from ..matrix import Vector
 
 
 world = Container()
