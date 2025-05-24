@@ -16,6 +16,8 @@ jobs:
         with:
           python-version: '3.13'
           cache: 'pip'
+      
+      - name: Install Packages 
         run: pip install .[dev]
 
       - name: Check Style
