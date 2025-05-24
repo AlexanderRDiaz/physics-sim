@@ -2,13 +2,26 @@ from __future__ import annotations
 
 import math
 
-from dataclasses import dataclass
 
-
-@dataclass(frozen=True)
 class Vector:
-    X: int | float
-    Y: int | float
+    __slots__ = [
+        '_X',
+        '_Y',
+    ]
+    _X: float
+    _Y: float
+
+    def __init__(self: Vector, x: int | float, y: int | float):
+        self._X = float(x)
+        self._Y = float(y)
+
+    @property
+    def X(self: Vector) -> float:
+        return self._X
+
+    @property
+    def Y(self: Vector) -> float:
+        return self._Y
 
     def __add__(self: Vector, obj) -> Vector:
         assert isinstance(obj, Vector), f'Cannot perform addition on Vector and {type(obj)}'
@@ -79,14 +92,14 @@ class Transform:
         'Cosine',
     ]
 
-    X: int | float
-    Y: int | float
+    X: float
+    Y: float
     Sine: float
     Cosine: float
 
     def __init__(self: Transform, x: int | float, y: int | float, angle: int | float) -> None:
-        self.X = x
-        self.Y = y
+        self.X = float(x)
+        self.Y = float(y)
         self.Sine = math.sin(angle)
         self.Cosine = math.cos(angle)
 

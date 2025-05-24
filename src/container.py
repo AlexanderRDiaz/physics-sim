@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 from PIL import Image, ImageDraw
 
-from body import BoxBody, CircleBody
+from .body import BoxBody, CircleBody
 
 
 class Container:

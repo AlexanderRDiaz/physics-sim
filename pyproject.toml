@@ -1,20 +1,15 @@
 [project]
-name = "siena-coding-comp"
+name = "physics-sim"
 version = "0.0.1"
-description = "Tips/Solutions for the Siena HS Coding Competition."
+description = ""
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
 
 [dependency-groups]
-lint = ["ruff", "pyright"]
-format = ["ruff"]
-typechecking = ["pyright"]
-all = [
-    { include-group = "lint" },
-    { include-group = "format" },
-    { include-group = "typechecking" },
-]
+runtime = ["scipy", "numpy", "pillow"]
+dev = ["ruff", "pyright"]
+test = [{ include-group = "lint" }, { include-group = "runtime" }]
 
 [tool.pyright]
 include = ["src"]

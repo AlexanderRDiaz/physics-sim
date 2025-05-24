@@ -1,6 +1,6 @@
 import sys
 
-from matrix import Vector
+from .matrix import Vector
 
 
 def ResolveCircles(

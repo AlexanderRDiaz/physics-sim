@@ -6,7 +6,7 @@ from abc import abstractmethod
 
 from PIL import ImageDraw
 
-from matrix import Transform, Vector
+from .matrix import Transform, Vector
 
 
 class Body:
