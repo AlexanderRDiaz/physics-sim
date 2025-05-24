@@ -3,13 +3,12 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  format:
-    name: Format
+  run:
+    name: Analyze Project
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Project
         uses: actions/checkout@v4
-
       
       - name: Install Python
         uses: actions/setup-python@v5.6.0
@@ -20,8 +19,8 @@ jobs:
       - name: Install Packages 
         run: pip install .[dev]
 
-      - name: Check Style
+      - name: Check Code Formatting
         run: ruff format --check src
 
-      - name: Lint
+      - name: Lint Code
         run: ruff check src
