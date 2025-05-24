@@ -17,10 +17,13 @@ jobs:
           cache: 'pip'
       
       - name: Install Packages 
-        run: pip install . .[dev]
+        run: pip install '.[dev]'
 
       - name: Check Code Formatting
         run: ruff format --check src
 
       - name: Lint Code
         run: ruff check src
+
+      - name: Run Unit Tests
+        run: python -m src.tests

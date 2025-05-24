@@ -1,6 +1,15 @@
-__pycache__
-.ruff_cache
-frames
+# MacOS
 .DS_Store
-**.gif
-bin
+
+# Python
+__pycache__
+build/
+dist/
+physics_sim.egg-info
+
+# Ruff
+.ruff_cache
+
+# Test files
+src/tests/bin
+

@@ -9,7 +9,7 @@ from src.container import Container
 from src.matrix import Vector
 
 
-FRAMES_PATH = 'src/bin/frames'
+FRAMES_PATH = 'src/test/bin/frames'
 
 
 class Main(unittest.TestCase):
