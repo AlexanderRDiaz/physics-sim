@@ -17,7 +17,7 @@ class Main(unittest.TestCase):
         if os.path.exists(FRAMES_PATH):
             shutil.rmtree(FRAMES_PATH)
 
-        os.mkdir(FRAMES_PATH)
+        os.makedirs(FRAMES_PATH)
 
     def tearDown(self: Main):
         if os.path.exists(FRAMES_PATH):
