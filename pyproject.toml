@@ -5,11 +5,10 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
+dependencies = ['pillow', 'numpy', 'scipy']
 
-[dependency-groups]
-runtime = ["scipy", "numpy", "pillow"]
+[project.optional-dependencies]
 dev = ["ruff", "pyright"]
-test = [{ include-group = "lint" }, { include-group = "runtime" }]
 
 [tool.pyright]
 include = ["src"]
