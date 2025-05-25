@@ -32,11 +32,12 @@ class Main(unittest.TestCase):
 
         world.Attach(Prerender)
 
-        for idx in range(120):
-            drawlib.StoreFrame(world.StepTime(), utils.FRAMES_PATH, idx)
+        for idx in range(121):
+            drawlib.StoreFrame(world.GenerateFrame(), utils.FRAMES_PATH, idx)
+            world.StepTime()
 
         movie = JES.makeMovieFromInitialFile(f'{utils.FRAMES_PATH}/frame000.jpg')
-        JES.writeAnimatedGif(movie, f'{utils.BIN_PATH}/{__name__}.gif')
+        JES.writeAnimatedGif(movie, f'{utils.BIN_PATH}/{__name__[5:]}.gif')
 
 
 if __name__ == '__main__':

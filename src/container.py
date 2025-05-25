@@ -28,17 +28,18 @@ class Container:
     def Attach(self: Container, work: Callable[[Container], None]) -> None:
         self.Work.append(work)
 
-    def StepTime(self: Container) -> Image.Image:
+    def GenerateFrame(self: Container) -> Image.Image:
         img = Image.new('RGB', (self.Width, self.Height), (255, 255, 255))
         draw = ImageDraw.Draw(img)
-
-        for func in self.Work:
-            func(self)
 
         for body in self.Bodies:
             body.Draw(draw)
 
         return img
+
+    def StepTime(self: Container) -> None:
+        for func in self.Work:
+            func(self)
 
     # Arguments for this function are the same as the constructor for CircleBody class.
     def CreateCircleBody(self: Container, *args) -> None:

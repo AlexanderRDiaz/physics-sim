@@ -8,14 +8,22 @@ def ResolveCircles(
     positionB: Vector,
     radiusA: float,
     radiusB: float,
-) -> tuple[Vector, float]:
-    distance = Vector.Distance(positionA, positionB)
+) -> tuple[Vector | None, float | None]:
+    distance = positionA.Distance(positionB)
     radii = radiusA + radiusB
 
-    return Vector.Normal(positionB - positionA), radii - distance
+    if distance >= radii:
+        return None, None
+
+    return (positionB - positionA).Normal(), radii - distance
 
 
-def ResolvePolygons(verticesA: list[Vector], verticesB: list[Vector]) -> bool:
+def ResolvePolygons(
+    verticesA: list[Vector], verticesB: list[Vector]
+) -> tuple[Vector | None, float | None]:
+    normal = Vector.Zero()
+    depth = -sys.float_info.max
+
     for i in range(len(verticesA)):
         va = verticesA[i]
         vb = verticesA[(i + 1) % len(verticesA)]
@@ -27,7 +35,13 @@ def ResolvePolygons(verticesA: list[Vector], verticesB: list[Vector]) -> bool:
         minB, maxB = __ProjectVertices(verticesB, axis)
 
         if minA >= maxB or minB >= maxA:
-            return False
+            return None, None
+
+        axisDepth = min(maxB - maxA, maxA - maxB)
+
+        if axisDepth < depth:
+            depth = axisDepth
+            normal = axis
 
     for i in range(len(verticesB)):
         va = verticesB[i]
@@ -40,9 +54,18 @@ def ResolvePolygons(verticesA: list[Vector], verticesB: list[Vector]) -> bool:
         minB, maxB = __ProjectVertices(verticesB, axis)
 
         if minA >= maxB or minB >= maxA:
-            return False
+            return None, None
 
-    return True
+        axisDepth = min(maxB - maxA, maxA - maxB)
+
+        if axisDepth < depth:
+            depth = axisDepth
+            normal = axis
+
+    depth /= normal.Length()
+    normal = normal.Normal()
+
+    return normal, depth
 
 
 def __ProjectVertices(vertices: list[Vector], axis: Vector) -> tuple[float, float]:

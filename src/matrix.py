@@ -31,20 +31,17 @@ class Vector:
         assert isinstance(obj, Vector), f'Cannot perform subtraction on Vector and {type(obj)}'
         return Vector(self.X - obj.X, self.Y - obj.Y)
 
-    def __mult__(self: Vector, s: int | float) -> Vector:
+    def __mul__(self: Vector, s: int | float) -> Vector:
         return Vector(self.X * s, self.Y * s)
 
-    def __div__(self: Vector, s: int | float) -> Vector:
+    def __truediv__(self: Vector, s: int | float) -> Vector:
         return Vector(self.X / s, self.Y / s)
 
     def __floordiv__(self: Vector, s: int | float) -> Vector:
         return Vector(self.X // s, self.Y // s)
 
     def __pos__(self: Vector) -> Vector:
-        return Vector(
-            -self.X if self.X < 0 else self.X,
-            -self.Y if self.Y < 0 else self.Y,
-        )
+        return self
 
     def __neg__(self: Vector) -> Vector:
         return Vector(-self.X, -self.Y)
@@ -55,6 +52,12 @@ class Vector:
 
         return (self.X == other.X) and (self.Y == other.Y)
 
+    def __ne__(self: Vector, other: object) -> bool:
+        if not isinstance(other, Vector):
+            return True
+
+        return (self.X != other.X) or (self.Y != other.Y)
+
     @staticmethod
     def Zero() -> Vector:
         return Vector(0, 0)
@@ -63,8 +66,8 @@ class Vector:
         return math.sqrt((self.X * self.X) + (self.Y * self.Y))
 
     def Normal(self: Vector) -> Vector:
-        _len_ = Vector.Length(self)
-        return Vector(self.X / _len_, self.Y / _len_)
+        length = self.Length()
+        return Vector(self.X / length, self.Y / length)
 
     def Distance(self: Vector, v: Vector) -> float:
         dx = self.X - v.X
