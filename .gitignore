@@ -11,5 +11,5 @@ physics_sim.egg-info
 .ruff_cache
 
 # Test files
-src/tests/bin
+src/eyecandy/bin
 physics-sim.zip
