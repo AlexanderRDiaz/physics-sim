@@ -2,7 +2,7 @@ import os
 import shutil
 
 
-BIN_PATH = 'src/tests/bin'
+BIN_PATH = 'src/eyecandy/bin'
 FRAMES_PATH = f'{BIN_PATH}/frames'
 
 
