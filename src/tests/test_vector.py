@@ -3,6 +3,7 @@ from __future__ import annotations
 import math
 import unittest
 
+from src import testlib
 from src.matrix import Vector
 
 
@@ -61,3 +62,8 @@ class Main(unittest.TestCase):
         self.assertTrue(dot == (a.X * b.X) + (a.Y * b.Y))
         cross = a.Cross(b)
         self.assertTrue(cross == (a.X * b.Y) - (a.Y * b.X))
+
+
+if __name__ == '__main__':
+    testlib.SoloRunOutput(__file__)
+    unittest.main()

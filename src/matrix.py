@@ -82,8 +82,8 @@ class Vector:
 
     def Transform(self: Vector, t: Transform) -> Vector:
         return Vector(
-            t.Cosine * self.X - t.Sine * self.Y + t.X,
-            t.Sine * self.X + t.Cosine * self.Y + t.Y,
+            (t.Cosine * self.X) - (t.Sine * self.Y) + t.X,
+            (t.Sine * self.X) + (t.Cosine * self.Y) + t.Y,
         )
 
 
@@ -103,8 +103,8 @@ class Transform:
     def __init__(self: Transform, x: int | float, y: int | float, angle: int | float) -> None:
         self.X = float(x)
         self.Y = float(y)
-        self.Sine = math.sin(angle)
-        self.Cosine = math.cos(angle)
+        self.Sine = math.sin(math.radians(angle))
+        self.Cosine = math.cos(math.radians(angle))
 
     @staticmethod
     def FromCoords(x: int | float, y: int | float, angle: int | float) -> Transform:

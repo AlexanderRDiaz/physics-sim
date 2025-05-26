@@ -2,18 +2,16 @@ from __future__ import annotations
 
 import unittest
 
-import utils
-
-from src import JES, drawlib
+from src import JES, drawlib, testlib
 from src.container import Container
 from src.matrix import Vector
 
 
 class Main(unittest.TestCase):
-    setUp = utils.setup
-    tearDown = utils.cleanup
+    setUp = testlib.GIFSetup
+    tearDown = testlib.GIFCleanup
 
-    def test_CreateGIF(self: Main) -> None:
+    def test_GIF(self: Main) -> None:
         world = Container()
         for x in range(40, 400, 40):
             for y in range(40, 400, 40):
@@ -28,17 +26,18 @@ class Main(unittest.TestCase):
 
         def Prerender(container: Container) -> None:
             for body in container.Bodies:
-                body.Rotate(3)
+                body.Rotate(1)
 
         world.Attach(Prerender)
 
-        for idx in range(121):
-            drawlib.StoreFrame(world.GenerateFrame(), utils.FRAMES_PATH, idx)
+        for idx in range(361):
+            drawlib.StoreFrame(world.GenerateFrame(), testlib.FRAMES_PATH, idx)
             world.StepTime()
 
-        movie = JES.makeMovieFromInitialFile(f'{utils.FRAMES_PATH}/frame000.jpg')
-        JES.writeAnimatedGif(movie, f'{utils.BIN_PATH}/{__name__[5:]}.gif')
+        movie = JES.makeMovieFromInitialFile(f'{testlib.FRAMES_PATH}/frame000.jpg')
+        JES.writeAnimatedGif(movie, f'{testlib.BIN_PATH}/{testlib.GIFName(__file__)}.gif')
 
 
 if __name__ == '__main__':
+    testlib.SoloRunOutput(__file__)
     unittest.main()

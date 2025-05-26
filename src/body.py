@@ -6,6 +6,7 @@ from abc import abstractmethod
 
 from PIL import ImageDraw
 
+from . import mathlib
 from .matrix import Transform, Vector
 
 
@@ -20,6 +21,7 @@ class Body:
         'Restitution',
         'Area',
         'Static',
+        'Color',
     ]
 
     Position: Vector
@@ -31,6 +33,8 @@ class Body:
     Mass: float
     Restitution: float
     Area: float
+
+    Color: tuple[int, int, int]
 
     Static: bool
 
@@ -48,9 +52,10 @@ class Body:
         self.RotationalVelocity = 0.0
 
         self.Density = density
-        self.Restitution = restitution
+        self.Restitution = mathlib.Clamp(restitution, 0.0, 1.0)
 
         self.Static = static
+        self.Color = (0, 0, 0)
 
     @abstractmethod
     def Draw(self: Body, draw: ImageDraw.ImageDraw) -> None:
@@ -113,7 +118,7 @@ class BoxBody(Body):
         self.TransformUpdateRequired = True
 
     def Draw(self: BoxBody, draw: ImageDraw.ImageDraw) -> None:
-        draw.polygon(_VerticesToDrawFormat(self.GetTransformedVertices()), fill=0)
+        draw.polygon(_VerticesToDrawFormat(self.GetTransformedVertices()), fill=self.Color)
 
     def Move(self: BoxBody, distance: Vector) -> None:
         self.Position += distance
@@ -125,6 +130,8 @@ class BoxBody(Body):
 
     def Rotate(self: BoxBody, amount: int | float):
         self.Rotation += amount
+        if 0.0 > self.Rotation > 360.0:
+            self.Rotation %= 360.0
         self.TransformUpdateRequired = True
 
     def GetTransformedVertices(self: BoxBody) -> tuple[Vector, ...]:
@@ -139,16 +146,16 @@ class BoxBody(Body):
         return self.TransformedVertices
 
     def __CreateVertices(self: BoxBody) -> tuple[Vector, ...]:
-        left = -self.Width / 2
+        left = -self.Width / 2.0
         right = left + self.Width
-        bottom = -self.Height / 2
+        bottom = -self.Height / 2.0
         top = bottom + self.Height
 
         return (
             Vector(left, top),
-            Vector(left, bottom),
-            Vector(right, bottom),
             Vector(right, top),
+            Vector(right, bottom),
+            Vector(left, bottom),
         )
 
 
