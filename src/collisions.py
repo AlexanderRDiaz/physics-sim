@@ -1,10 +1,32 @@
 import sys
 
+from .body import BoxBody, CircleBody
 from .matrix import Vector
 
 
+def ResolveCollision(
+    bodyA: BoxBody | CircleBody, bodyB: BoxBody | CircleBody, normal: Vector, depth: float
+) -> None:
+    relativeVelocity = bodyB.LinearVelocity - bodyA.LinearVelocity
+
+    if relativeVelocity.Dot(normal) > 0:
+        return
+
+    e = min(bodyA.Restitution, bodyB.Restitution)
+
+    j = -(1.0 + e) * relativeVelocity.Dot(normal)
+    j /= bodyA.InverseMass + bodyB.InverseMass
+    impulse = normal * j
+
+    bodyA.LinearVelocity += impulse * bodyA.InverseMass
+    bodyB.LinearVelocity -= impulse * bodyB.InverseMass
+
+
 def CirclePolygon(
-    circleCenter: Vector, radius: float, polygonCenter: Vector, vertices: tuple[Vector, ...]
+    circleCenter: Vector,
+    radius: float,
+    polygonCenter: Vector,
+    vertices: tuple[Vector, ...],
 ) -> tuple[Vector, float] | None:
     normal = Vector.Zero()
     depth = sys.float_info.max
@@ -44,7 +66,7 @@ def CirclePolygon(
         depth = axisDepth
         normal = axis
 
-    direction = polygonCenter - circleCenter
+    direction = circleCenter - polygonCenter
 
     if direction.Dot(normal) < 0.0:
         normal = -normal
@@ -61,7 +83,7 @@ def Circle(
     if distance >= radii:
         return
 
-    return (centerB - centerA).Normal(), radii - distance
+    return (centerA - centerB).Normal(), radii - distance
 
 
 def Polygons(
@@ -108,7 +130,7 @@ def Polygons(
             depth = axisDepth
             normal = axis
 
-    direction = centerB - centerA
+    direction = centerA - centerB
 
     if direction.Dot(normal) < 0.0:
         normal = -normal

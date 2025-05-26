@@ -14,10 +14,12 @@ class Body:
     __slots__ = [
         'Position',
         'LinearVelocity',
+        'Force',
         'Rotation',
         'RotationalVelocity',
         'Density',
         'Mass',
+        'InverseMass',
         'Restitution',
         'Area',
         'Static',
@@ -26,11 +28,13 @@ class Body:
 
     Position: Vector
     LinearVelocity: Vector
+    Force: Vector
     Rotation: float
     RotationalVelocity: float
 
     Density: float
     Mass: float
+    InverseMass: float
     Restitution: float
     Area: float
 
@@ -56,6 +60,15 @@ class Body:
 
         self.Static = static
         self.Color = (0, 0, 0)
+
+    def Step(self: Body, time: float) -> None:
+        self.LinearVelocity += self.Force * time
+        self.Move(self.LinearVelocity * time)
+        self.Rotate(self.RotationalVelocity * time)
+        self.Force = Vector.Zero()
+
+    def AddForce(self: Body, force: Vector) -> None:
+        self.Force = force
 
     @abstractmethod
     def Draw(self: Body, draw: ImageDraw.ImageDraw) -> None:
@@ -112,6 +125,11 @@ class BoxBody(Body):
         self.Height = height
         self.Area = width * height
         self.Mass = self.Area * self.Density
+
+        if self.Static:
+            self.InverseMass = 0.0
+        else:
+            self.InverseMass = 1 / self.Mass
 
         self.Vertices = self.__CreateVertices()
         self.TriangulatedVertices = (0, 1, 2, 0, 2, 3)
@@ -184,6 +202,11 @@ class CircleBody(Body):
         self.Radius = radius
         self.Area = math.pi * radius * radius
         self.Mass = self.Area * self.Density
+
+        if self.Static:
+            self.InverseMass = 0.0
+        else:
+            self.InverseMass = 1 / self.Mass
 
     def Move(self: CircleBody, distance: Vector) -> None:
         self.Position += distance

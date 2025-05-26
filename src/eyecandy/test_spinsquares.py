@@ -3,8 +3,8 @@ from __future__ import annotations
 import unittest
 
 from src import JES, drawlib, testlib
-from src.container import Container
 from src.matrix import Vector
+from src.world import World
 
 
 class Main(unittest.TestCase):
@@ -12,7 +12,7 @@ class Main(unittest.TestCase):
     tearDown = testlib.GIFCleanup
 
     def test_GIF(self: Main) -> None:
-        world = Container()
+        world = World()
         for x in range(40, 400, 40):
             for y in range(40, 400, 40):
                 world.CreateBoxBody(
@@ -24,8 +24,8 @@ class Main(unittest.TestCase):
                     False,
                 )
 
-        def Prerender(container: Container) -> None:
-            for body in container.Bodies:
+        def Prerender(world: World) -> None:
+            for body in world.Bodies:
                 body.Rotate(1)
 
         world.Attach(Prerender)
