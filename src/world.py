@@ -15,40 +15,39 @@ class World:
         'Height',
         'Bodies',
         'Gravity',
-        'Work',
+        'Prerender',
+        'OnCollide',
     ]
 
     Width: int
     Height: int
 
     Bodies: list[BoxBody | CircleBody]
-    Gravity: float
+    Gravity: Vector
 
-    Work: list[Callable[[World], None]]
+    Prerender: Callable[..., None]
+    OnCollide: Callable[..., None]
 
     def __init__(self: World) -> None:
         self.Width, self.Height = 400, 400
         self.Bodies = []
-        self.Work = []
-
-    def Attach(self: World, work: Callable[[World], None]) -> None:
-        self.Work.append(work)
+        self.Gravity = Vector(0.0, 9.81)
 
     def StepTime(self: World, time: float) -> None:
-        for f in self.Work:
-            f(self)
+        self.Prerender(self)
 
         for body in self.Bodies:
-            body.Step(time)
+            body.Step(time, self.Gravity)
 
         for i in range(len(self.Bodies)):
             bodyA = self.Bodies[i]
-            for j in range(i, len(self.Bodies)):
+            for j in range(i + 1, len(self.Bodies)):
                 bodyB = self.Bodies[j]
-
                 collision = self.__Intersection(bodyA, bodyB)
 
                 if collision:
+                    self.OnCollide(bodyA, bodyB)
+
                     normal, depth = collision
                     bodyA.Move(normal * depth / 2.0)
                     bodyB.Move(-normal * depth / 2.0)
@@ -57,9 +56,6 @@ class World:
     def GenerateFrame(self: World) -> Image.Image:
         img = Image.new('RGB', (self.Width, self.Height), (255, 255, 255))
         draw = ImageDraw.Draw(img)
-
-        for f in self.Work:
-            f(self)
 
         for body in self.Bodies:
             body.Draw(draw)

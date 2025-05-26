@@ -61,10 +61,11 @@ class Body:
         self.Static = static
         self.Color = (0, 0, 0)
 
-    def Step(self: Body, time: float) -> None:
-        self.LinearVelocity += self.Force * time
+    def Step(self: Body, time: float, gravity: Vector) -> None:
+        self.LinearVelocity += gravity * time
         self.Move(self.LinearVelocity * time)
         self.Rotate(self.RotationalVelocity * time)
+
         self.Force = Vector.Zero()
 
     def AddForce(self: Body, force: Vector) -> None:
@@ -129,7 +130,7 @@ class BoxBody(Body):
         if self.Static:
             self.InverseMass = 0.0
         else:
-            self.InverseMass = 1 / self.Mass
+            self.InverseMass = 1.0 / self.Mass
 
         self.Vertices = self.__CreateVertices()
         self.TriangulatedVertices = (0, 1, 2, 0, 2, 3)
@@ -206,7 +207,7 @@ class CircleBody(Body):
         if self.Static:
             self.InverseMass = 0.0
         else:
-            self.InverseMass = 1 / self.Mass
+            self.InverseMass = 1.0 / self.Mass
 
     def Move(self: CircleBody, distance: Vector) -> None:
         self.Position += distance

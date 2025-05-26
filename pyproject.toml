@@ -1,7 +1,7 @@
 [project]
 name = "physics-sim"
 version = "0.0.1"
-description = ""
+description = "Physics simulator I made for fun and as a school project."
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"

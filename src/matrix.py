@@ -11,7 +11,7 @@ class Vector:
     _X: float
     _Y: float
 
-    def __init__(self: Vector, x: int | float, y: int | float):
+    def __init__(self: Vector, x: float, y: float):
         self._X = float(x)
         self._Y = float(y)
 
@@ -31,13 +31,13 @@ class Vector:
         assert isinstance(obj, Vector), f'Cannot perform subtraction on Vector and {type(obj)}'
         return Vector(self.X - obj.X, self.Y - obj.Y)
 
-    def __mul__(self: Vector, s: int | float) -> Vector:
+    def __mul__(self: Vector, s: float) -> Vector:
         return Vector(self.X * s, self.Y * s)
 
-    def __truediv__(self: Vector, s: int | float) -> Vector:
+    def __truediv__(self: Vector, s: float) -> Vector:
         return Vector(self.X / s, self.Y / s)
 
-    def __floordiv__(self: Vector, s: int | float) -> Vector:
+    def __floordiv__(self: Vector, s: float) -> Vector:
         return Vector(self.X // s, self.Y // s)
 
     def __pos__(self: Vector) -> Vector:
@@ -60,7 +60,7 @@ class Vector:
 
     @staticmethod
     def Zero() -> Vector:
-        return Vector(0, 0)
+        return Vector(0.0, 0.0)
 
     def Length(self: Vector) -> float:
         return math.sqrt((self.X * self.X) + (self.Y * self.Y))
@@ -74,10 +74,10 @@ class Vector:
         dy = self.Y - v.Y
         return math.sqrt((dx * dx) + (dy * dy))
 
-    def Dot(self: Vector, v: Vector) -> int | float:
+    def Dot(self: Vector, v: Vector) -> float:
         return (self.X * v.X) + (self.Y * v.Y)
 
-    def Cross(self: Vector, v: Vector) -> int | float:
+    def Cross(self: Vector, v: Vector) -> float:
         return (self.X * v.Y) - (self.Y * v.X)
 
     def Transform(self: Vector, t: Transform) -> Vector:
@@ -100,20 +100,20 @@ class Transform:
     Sine: float
     Cosine: float
 
-    def __init__(self: Transform, x: int | float, y: int | float, angle: int | float) -> None:
-        self.X = float(x)
-        self.Y = float(y)
+    def __init__(self: Transform, x: float, y: float, angle: float) -> None:
+        self.X = x
+        self.Y = y
         self.Sine = math.sin(math.radians(angle))
         self.Cosine = math.cos(math.radians(angle))
 
     @staticmethod
-    def FromCoords(x: int | float, y: int | float, angle: int | float) -> Transform:
+    def FromCoords(x: float, y: float, angle: float) -> Transform:
         return Transform(x, y, angle)
 
     @staticmethod
-    def FromVector(position: Vector, angle: int | float) -> Transform:
+    def FromVector(position: Vector, angle: float) -> Transform:
         return Transform(position.X, position.Y, angle)
 
     @staticmethod
     def Zero() -> Transform:
-        return Transform(0, 0, 0)
+        return Transform(0.0, 0.0, 0.0)
